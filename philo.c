@@ -33,15 +33,15 @@ int main(int argc, char **argv)
 	}
 	if (init_data(&data, argc, argv))
 		return 1;
-	printf("data.time = %lld\n", data.start);
+//	printf("data.time = %lld\n", data.start);
 	routine(&data);
 	// if (init_philo(&data))
 	// 	return 1;
 	// if (start_philo(&data))
 	// 	return 1;
 	cleanup(&data);
-	free(data.forks);
-	free(data.philos);
+	// free(data.forks);
+	// free(data.philos);
 	return 0;
 }
 

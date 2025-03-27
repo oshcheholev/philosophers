@@ -9,6 +9,7 @@ RESET=\033[0m
 SRCS = philo.c \
 		ft_atoi.c \
 		time.c \
+		monitor.c \
 		philo_init.c \
 		philo_routine.c \
 		philo_cleanup.c \

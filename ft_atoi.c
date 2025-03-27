@@ -1,5 +1,19 @@
 #include "philo.h"
 
+void	ft_bzero(void *s, size_t n)
+{
+	unsigned char	*ch;
+	size_t			i;
+
+	i = 0;
+	ch = s;
+	while (i < n)
+	{
+		ch[i] = '\0';
+		i++;
+	}
+}
+
 int ft_is_num(char *c)
 {
 	int i;
