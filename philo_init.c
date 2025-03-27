@@ -8,7 +8,7 @@ void set_philo_forks(t_data *data)
 	i = 0;
 	while (i < data->num_of_philo)
 	{
-		if(i % 2 == 0)
+		if(i % 2 != 0)
 		{
 			data->philos[i].left_fork = (i + 1) % data->num_of_philo;
 			data->philos[i].right_fork = i;
