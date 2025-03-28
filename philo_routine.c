@@ -49,8 +49,8 @@ void *philo_routine(void *arg)
 		
 		if(check_if_ok(data))
 			break;
-		// if (philo->id % 2 == 1) 
-		// 	ft_usleep(20, data); // Small delay for odd philosophers
+		if (philo->id % 2 == 1) 
+			ft_usleep(20, data); // Small delay for odd philosophers
 		
 		// Попытка взять вилки
 		if (pthread_mutex_lock(&data->forks[philo->left_fork]) == 0)
@@ -97,11 +97,11 @@ void *philo_routine(void *arg)
 		}
 		
 		// Спит
+		pthread_mutex_lock(&philo->eating_mutex);
+		philo->is_eating = 0;
+		pthread_mutex_unlock(&philo->eating_mutex);
 		if(!check_if_ok(data))
 		{
-			pthread_mutex_lock(&philo->eating_mutex);
-			philo->is_eating = 0;
-			pthread_mutex_unlock(&philo->eating_mutex);
 			print_msg("is sleeping", philo, data);
 			ft_usleep(data->time_to_sleep, data);
 		}
