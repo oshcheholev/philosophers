@@ -43,14 +43,14 @@ void *philo_routine(void *arg)
 {
 	t_philo *philo = (t_philo *)arg;
 	t_data *data = philo->data;
-	
+//	long long start_wait = ft_get_time(data);
 	while (1)
 	{
 		
 		if(check_if_ok(data))
 			break;
-		if (philo->id % 2 == 1) 
-			ft_usleep(1, data); // Small delay for odd philosophers
+		// if (philo->id % 2 == 1) 
+		// 	ft_usleep(20, data); // Small delay for odd philosophers
 		
 		// Попытка взять вилки
 		if (pthread_mutex_lock(&data->forks[philo->left_fork]) == 0)
@@ -62,6 +62,11 @@ void *philo_routine(void *arg)
 				break;
 			}
 			print_msg("has taken a fork", philo, data);
+
+			// if (ft_get_time(data) - start_wait > data->time_to_die / 2) {
+			// 	pthread_mutex_unlock(&data->forks[philo->left_fork]);
+			// 	continue;
+			// }
 			
 			if (pthread_mutex_lock(&data->forks[philo->right_fork]) == 0)
 			{

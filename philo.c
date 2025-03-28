@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 			printf("Error: Negative arguments\n");
 			return 1;
 		}
-		printf("argv[%d] = %d\n", arg, ft_atoi(argv[arg]));
+//		printf("argv[%d] = %d\n", arg, ft_atoi(argv[arg]));
 		arg++;
 	}
 	if (init_data(&data, argc, argv))
