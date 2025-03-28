@@ -19,6 +19,7 @@ typedef struct s_philo
 //	pthread_mutex_t	print_msg;
 //	pthread_mutex_t	eating;
 	pthread_mutex_t	time_mutex;
+	pthread_mutex_t eating_mutex;
 //	t_data 			*data;
 	struct s_data	*data;
 }				t_philo;
@@ -45,6 +46,8 @@ int routine(t_data *data);
 void cleanup(t_data *data);
 
 int monitor (t_data *data);
+void	print_msg(char *msg, t_philo *philo, t_data *data);
+int check_if_ok(t_data *data);
 
 int ft_atoi(char *str);
 int ft_is_num(char *c);

@@ -33,6 +33,7 @@ void init_philo(t_data *data, int i)
 //		pthread_mutex_init(&data->philos[i].eating, NULL);
 //		pthread_mutex_init(&data->philos[i].print_msg, NULL);
 		pthread_mutex_init(&data->philos[i].time_mutex, NULL);
+		pthread_mutex_init(&data->philos[i].eating_mutex, NULL);
 		data->philos[i].data = data;
 	}
 	

@@ -34,12 +34,16 @@ int main(int argc, char **argv)
 	if (init_data(&data, argc, argv))
 		return 1;
 //	printf("data.time = %lld\n", data.start);
-	routine(&data);
+	if (routine(&data))
+	{
+//		cleanup(&data);
+		return 1;
+	}
 	// if (init_philo(&data))
 	// 	return 1;
 	// if (start_philo(&data))
 	// 	return 1;
-	cleanup(&data);
+//	cleanup(&data);
 	// free(data.forks);
 	// free(data.philos);
 	return 0;

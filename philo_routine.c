@@ -34,103 +34,78 @@ void	if_one_philo(t_data *data)
 		ft_usleep(data->time_to_die, data);
 		print_msg("died", &data->philos[0], data);
 //		pthread_mutex_unlock(&(data->print_msg));
-		pthread_mutex_unlock(&(data->forks[0]));
-		data->one_dead = 1;
+pthread_mutex_unlock(&(data->forks[0]));
+data->one_dead = 1;
 	// }
 }
-// void *philo_routine(void *arg)
-// {
-// 	t_philo *philo;
-// 	t_data *data;
-
-// 	philo = (t_philo *)arg;
-// 	data = philo->data;
-
-// 	while (1)
-// 	{
-// 		pthread_mutex_lock(&philo->time_mutex);
-//         if (philo->meals_eaten >= data->meals_num) {
-//             pthread_mutex_unlock(&philo->time_mutex);
-//             break; // Выход из цикла, если философ наелся
-//         }
-//         pthread_mutex_unlock(&philo->time_mutex);
-// 		// Acquire forks (left fork first to avoid deadlock)
-// 		if (philo->meals_eaten < data->meals_num)
-// 		{
-// 		pthread_mutex_lock(&data->forks[philo->left_fork]);
-// 		print_msg("has taken a fork", philo, data);
-// 		pthread_mutex_lock(&data->forks[philo->right_fork]);
-// 		print_msg("has taken a fork", philo, data);
-		
-// 		// Start eating
-// 		pthread_mutex_lock(&philo->time_mutex);
-// 		philo->time_from_meal = ft_get_time(data); // Update meal time before printing
-// 		philo->meals_eaten++;
-// 		pthread_mutex_unlock(&philo->time_mutex);
-		
-// 		print_msg("is eating", philo, data);
-
-// 		ft_usleep(data->time_to_eat, data);
-		
-// 		// Release forks
-// 		print_msg("is sleeping", philo, data);
-// 		pthread_mutex_unlock(&data->forks[philo->left_fork]);
-// 		pthread_mutex_unlock(&data->forks[philo->right_fork]);
-		
-// 		ft_usleep(data->time_to_sleep, data);
-// 		print_msg("is thinking", philo, data);
-// 		}
-// 	}
-// 	return (NULL);
-// }
 
 void *philo_routine(void *arg)
 {
 	t_philo *philo = (t_philo *)arg;
 	t_data *data = philo->data;
-
+	
 	while (1)
 	{
-		if (data->one_dead || data->all_eaten)
+		
+		if(check_if_ok(data))
 			break;
-		if (philo->id % 2 != 1) 
-		    ft_usleep(1, data); // Small delay for odd philosophers
-		pthread_mutex_lock(&philo->time_mutex);
-		if (philo->meals_eaten >= data->meals_num) {
-			pthread_mutex_unlock(&philo->time_mutex);
-			break; // Выход из цикла, если философ наелся
-		}
-		pthread_mutex_unlock(&philo->time_mutex);
-
+		if (philo->id % 2 == 1) 
+			ft_usleep(1, data); // Small delay for odd philosophers
+		
 		// Попытка взять вилки
 		if (pthread_mutex_lock(&data->forks[philo->left_fork]) == 0)
 		{
+			//			printf("philo %d  %d  %d\n", philo->id, data->one_dead, data->all_eaten);
+			if(check_if_ok(data))
+			{
+				pthread_mutex_unlock(&data->forks[philo->left_fork]);
+				break;
+			}
 			print_msg("has taken a fork", philo, data);
+			
 			if (pthread_mutex_lock(&data->forks[philo->right_fork]) == 0)
 			{
+				if(check_if_ok(data))
+				{
+					pthread_mutex_unlock(&data->forks[philo->right_fork]);
+					pthread_mutex_unlock(&data->forks[philo->left_fork]);
+					break;
+				}
 				print_msg("has taken a fork", philo, data);
-
+				
 				// Начинает есть
 				pthread_mutex_lock(&philo->time_mutex);
 				philo->time_from_meal = ft_get_time(data);
 				philo->meals_eaten++;
 				pthread_mutex_unlock(&philo->time_mutex);
 				
+				pthread_mutex_lock(&philo->eating_mutex);
+				philo->is_eating = 1;
+				pthread_mutex_unlock(&philo->eating_mutex);
 				print_msg("is eating", philo, data);
 				ft_usleep(data->time_to_eat, data);
-
+				
 				// Освобождает вилки
 				pthread_mutex_unlock(&data->forks[philo->right_fork]);
 			}
 			pthread_mutex_unlock(&data->forks[philo->left_fork]);
 		}
-
-		// Спит
-		print_msg("is sleeping", philo, data);
-		ft_usleep(data->time_to_sleep, data);
 		
+		// Спит
+		if(!check_if_ok(data))
+		{
+			pthread_mutex_lock(&philo->eating_mutex);
+			philo->is_eating = 0;
+			pthread_mutex_unlock(&philo->eating_mutex);
+			print_msg("is sleeping", philo, data);
+			ft_usleep(data->time_to_sleep, data);
+		}
+		if(!check_if_ok(data))
+		{
+			print_msg("is thinking", philo, data);
+			ft_usleep(1, data);
+		}
 		// Думает
-		print_msg("is thinking", philo, data);
 	}
 	return NULL;
 }
@@ -163,15 +138,16 @@ int routine(t_data *data)
 		// if (monitor(data))
 		// 	return (1);
 		if (monitor(data))  // If monitor detects termination
-    {
-        i = 0;
-        while (i < data->num_of_philo)
-        {
-            pthread_join(data->philos[i].thread, NULL); // Join all threads
-            i++;
-        }
-        return (1);
-    }
+		{
+			i = 0;
+			while (i < data->num_of_philo)
+			{
+				pthread_join(data->philos[i].thread, NULL); // Join all threads
+				i++;
+			}
+			cleanup(data);
+			return (1);
+		}
 		i = 0;
 		while (i < data->num_of_philo)
 		{
