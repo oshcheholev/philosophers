@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oshcheho <oshcheho@student.42vienna.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/31 14:43:46 by oshcheho          #+#    #+#             */
+/*   Updated: 2025/03/31 14:43:46 by oshcheho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	ft_bzero(void *s, size_t n)
@@ -14,9 +26,9 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-int ft_is_num(char *c)
+int	ft_is_num(char *c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (c[i])
@@ -28,26 +40,19 @@ int ft_is_num(char *c)
 	return (0);
 }
 
-int ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
-	int i;
-	int sign;
-	int res;
+	int			i;
+	long long	res;
 
 	i = 0;
-	sign = 1;
 	res = 0;
-	if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	else if (str[i] == '+')
-		i++;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		res = res * 10 + str[i] - '0';
 		i++;
+		if (res > 2147483647)
+			return (-1);
 	}
-	return (res * sign);
+	return ((int)res);
 }

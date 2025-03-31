@@ -1,12 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oshcheho <oshcheho@student.42vienna.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/31 14:58:08 by oshcheho          #+#    #+#             */
+/*   Updated: 2025/03/31 14:58:08 by oshcheho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
-
-// void	ft_get_time(struct timeval *time, t_data *data)
-// {
-// 	pthread_mutex_lock(&data->time_mutex);
-// 	gettimeofday(time, NULL);
-// 	pthread_mutex_unlock(&info->time_mutex);
-// }
 
 long long	ft_get_time(t_data *data)
 {

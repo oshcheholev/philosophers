@@ -1,51 +1,74 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oshcheho <oshcheho@student.42vienna.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/31 14:44:25 by oshcheho          #+#    #+#             */
+/*   Updated: 2025/03/31 14:59:14 by oshcheho         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int main(int argc, char **argv)
+void	print_msg(char *msg, t_philo *philo, t_data *data)
 {
-	int arg = 1;
-	t_data data;
-//	t_philo philo;
+	pthread_mutex_lock(&data->print_msg);
+	printf("%lli %d %s\n", ft_get_time(data), philo->id + 1, msg);
+	pthread_mutex_unlock(&data->print_msg);
+}
+
+void	if_one_philo(t_data *data)
+{
+	pthread_mutex_lock(&(data->forks[0]));
+	print_msg("has taken a fork", &data->philos[0], data);
+	ft_usleep(data->time_to_die, data);
+	print_msg("died", &data->philos[0], data);
+	pthread_mutex_unlock(&(data->forks[0]));
+	data->one_dead = 1;
+}
+
+int	check_args(int argc, char **argv)
+{
+	int	arg;
+
+	arg = 1;
+	while (arg < argc)
+	{
+		if (ft_is_num(argv[arg]))
+			return (1);
+		if (ft_atoi(argv[arg]) == 0)
+			return (1);
+		if (ft_atoi(argv[arg]) < 0)
+			return (1);
+		arg++;
+	}
+	return (0);
+}
+
+int	main(int argc, char **argv)
+{
+	t_data	data;
 
 	if (argc != 5 && argc != 6)
 	{
 		printf("Error: Wrong number of arguments\n");
 		return (1);
 	}
-	while (arg < argc)
+	if (check_args(argc, argv))
 	{
-		if (ft_is_num(argv[arg]))
-		{
-			printf("Error: Wrong arguments\n");
-			return (1);
-		}
-		if (ft_atoi(argv[arg]) == 0)
-		{
-			printf("Error: Wrong arguments\n");
-			return 1;
-		}
-		if (ft_atoi(argv[arg]) < 0)
-		{
-			printf("Error: Negative arguments\n");
-			return 1;
-		}
-//		printf("argv[%d] = %d\n", arg, ft_atoi(argv[arg]));
-		arg++;
+		printf("Error: Wrong arguments\n");
+		return (1);
 	}
 	if (init_data(&data, argc, argv))
-		return 1;
-//	printf("data.time = %lld\n", data.start);
-	if (routine(&data))
+		return (1);
+	if (data.num_of_philo == 1)
 	{
-//		cleanup(&data);
-		return 1;
+		if_one_philo(&data);
+		return (1);
 	}
-	// if (init_philo(&data))
-	// 	return 1;
-	// if (start_philo(&data))
-	// 	return 1;
-//	cleanup(&data);
-	// free(data.forks);
-	// free(data.philos);
-	return 0;
+	if (routine(&data))
+		return (1);
+	return (0);
 }
-
