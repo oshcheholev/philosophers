@@ -57,6 +57,8 @@ int			ft_is_num(char *c);
 int			init_data(t_data *data, int argc, char **argv);
 void		cleanup(t_data *data);
 void		print_msg(char *msg, t_philo *philo, t_data *data);
+void		print_die_msg(char *msg, t_philo *philo, t_data *data);
+void		set_init_delay(t_data *data, t_philo *philo);
 long long	ft_usleep(long long milliseconds, t_data *data);
 long long	ft_get_time(t_data *data);
 

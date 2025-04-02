@@ -26,7 +26,7 @@ long long	ft_usleep(long long milliseconds, t_data *data)
 	int	start;
 
 	start = ft_get_time(data);
-	while (ft_get_time(data) - start < milliseconds)
+	while (!check_if_ok(data) && ft_get_time(data) - start < milliseconds)
 		usleep(100);
 	return (0);
 }

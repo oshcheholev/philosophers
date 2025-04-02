@@ -6,7 +6,7 @@
 /*   By: oshcheho <oshcheho@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 14:44:25 by oshcheho          #+#    #+#             */
-/*   Updated: 2025/03/31 14:59:14 by oshcheho         ###   ########.fr       */
+/*   Updated: 2025/04/02 17:14:11 by oshcheho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	if (argc != 5 && argc != 6)
+	if (argc < 5 || argc > 6)
 	{
 		printf("Error: Wrong number of arguments\n");
 		return (1);

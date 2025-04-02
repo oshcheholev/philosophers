@@ -6,7 +6,7 @@
 /*   By: oshcheho <oshcheho@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 12:08:55 by oshcheho          #+#    #+#             */
-/*   Updated: 2025/03/31 16:10:45 by oshcheho         ###   ########.fr       */
+/*   Updated: 2025/04/02 17:13:41 by oshcheho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,24 @@ int	check_if_ok(t_data *data)
 	pthread_mutex_unlock(&data->death_mutex);
 	pthread_mutex_unlock(&data->meals_mutex);
 	return (0);
+}
+
+void	set_init_delay(t_data *data, t_philo *philo)
+{
+	pthread_mutex_lock(&philo->time_mutex);
+	if (philo->id % 2 != 1 && data->num_of_philo % 2 == 1)
+	{
+		pthread_mutex_unlock(&philo->time_mutex);
+		ft_usleep(10, data);
+	}
+	else if (philo->id % 2 == 1 && data->num_of_philo % 2 == 0
+		&& philo->meals_eaten == 0)
+	{
+		ft_usleep(1, data);
+		pthread_mutex_unlock(&philo->time_mutex);
+	}
+	else
+		pthread_mutex_unlock(&philo->time_mutex);
 }
 
 int	check_all_ate(t_data *data)
